@@ -22,8 +22,10 @@ contract CounterScript is Script {
     }
 
     function run() public {
-        vm.createSelectFork(vm.rpcUrl("https://bartio.drpc.org"));
+        vm.createSelectFork(vm.envString("ALCHEMY_RPC_URL"));
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
+
+        address positionManager = vm.envAddress("V3_POSITION_MANAGER");
 
         IUniswapV3Staker.IncentiveKey memory incentive = IUniswapV3Staker
             .IncentiveKey({
@@ -39,8 +41,11 @@ contract CounterScript is Script {
                 refundee: 0xe62A4B251d4e8fac52B08Cc2b88F091548426e4C
             });
 
-        INonfungiblePositionManager(0xC0568C6E9D5404124c8AA9EfD955F3f14C8e64A6)
-            .safeTransferFrom(msg.sender, address(staker), 34979);
+        INonfungiblePositionManager(positionManager).safeTransferFrom(
+            msg.sender,
+            address(staker),
+            34979
+        );
         // staker.stakeToken(incentive, 34911);
         vm.stopBroadcast();
     }

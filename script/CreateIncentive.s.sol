@@ -12,19 +12,16 @@ import {IncentiveId} from "../src/libraries/IncentiveId.sol";
 import {console} from "forge-std/console.sol";
 contract CreateIncentive is Script {
     function run() public {
-        vm.createSelectFork(vm.rpcUrl("https://bartio.drpc.org"));
+        vm.createSelectFork(vm.envString("ALCHEMY_RPC_URL"));
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
-        IUniswapV3Staker staker = IUniswapV3Staker(
-            0xeB877616063CBc2DF98dF8EBc984FBa5AAE7D60f
-        );
+        address _V3_STAKER_ADDRESS = vm.envAddress("V3_STAKER");
+
+        IUniswapV3Staker staker = IUniswapV3Staker(_V3_STAKER_ADDRESS);
 
         MockToken mockToken = new MockToken();
 
-        mockToken.approve(
-            address(0xeB877616063CBc2DF98dF8EBc984FBa5AAE7D60f),
-            1000000000000000000000000
-        );
+        mockToken.approve(_V3_STAKER_ADDRESS, 1000000000000000000000000);
 
         IUniswapV3Staker.IncentiveKey memory key = IUniswapV3Staker
             .IncentiveKey({
