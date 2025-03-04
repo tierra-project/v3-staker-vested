@@ -5,12 +5,13 @@ pragma abicoder v2;
 import {Script} from "forge-std/Script.sol";
 import {console} from "forge-std/console.sol";
 import {UniswapV3Staker} from "../src/UniswapV3Staker.sol";
-import '@uniswap/v3-core/contracts/interfaces/IERC20Minimal.sol';
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
-import '../src/interfaces/IUniswapV3Staker.sol';
+import "@uniswap/v3-core/contracts/interfaces/IERC20Minimal.sol";
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
+import "../src/interfaces/IUniswapV3Staker.sol";
 
 contract CounterScript is Script {
-    UniswapV3Staker staker = UniswapV3Staker(0xeB877616063CBc2DF98dF8EBc984FBa5AAE7D60f);
+    UniswapV3Staker staker =
+        UniswapV3Staker(0xeB877616063CBc2DF98dF8EBc984FBa5AAE7D60f);
 
     address rewardToken = 0x490c68D1D7dB9b5874ECfFDC606D0008259F88c5;
     uint rewardAmount = 100 * 1 ether;
@@ -18,7 +19,9 @@ contract CounterScript is Script {
 
     function setUp() public {}
 
-    function compute(IUniswapV3Staker.IncentiveKey memory key) internal pure returns (bytes32 incentiveId) {
+    function compute(
+        IUniswapV3Staker.IncentiveKey memory key
+    ) internal pure returns (bytes32 incentiveId) {
         return keccak256(abi.encode(key));
     }
 
@@ -26,16 +29,15 @@ contract CounterScript is Script {
         vm.createSelectFork(vm.rpcUrl("https://bartio.drpc.org"));
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
-
-
-        IUniswapV3Staker.IncentiveKey memory incentive = IUniswapV3Staker.IncentiveKey({
-            rewardToken: IERC20Minimal(rewardToken),
-            pool: IUniswapV3Pool(rewardPool),
-            startTime: block.timestamp + 5,
-            endTime: block.timestamp + 12 days,
-            vestingPeriod: 24 hours,
-            refundee: 0x5D931C88De4F75D1984E83f46534E7169A0Ff839
-        });
+        IUniswapV3Staker.IncentiveKey memory incentive = IUniswapV3Staker
+            .IncentiveKey({
+                rewardToken: IERC20Minimal(rewardToken),
+                pool: IUniswapV3Pool(rewardPool),
+                startTime: block.timestamp + 5,
+                endTime: block.timestamp + 12 days,
+                vestingPeriod: 24 hours,
+                refundee: 0x5D931C88De4F75D1984E83f46534E7169A0Ff839
+            });
 
         IERC20Minimal(rewardToken).approve(address(staker), rewardAmount);
         staker.createIncentive(incentive, rewardAmount);
