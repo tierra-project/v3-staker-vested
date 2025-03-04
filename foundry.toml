@@ -1,27 +1,14 @@
 [profile.default]
-# Pin the compiler version to match your contracts
 solc_version = "0.7.6"
-
-# Turn optimizer on, adjust runs as needed
 optimizer = true
 optimizer_runs = 2000000
-
-# Try enabling IR pipeline to fix stack too deep. Toggle if it doesn't help.
 via_ir = false
-
-# Usually best to turn off auto detection if you're specifying a version
 auto_detect_solc = false
-
-# Additional fs_permissions, etc. go here.
-
 [fmt]
-# Your formatting settings
 src = "src"
 out = "out"
 libs = ["lib"]
-
 fs_permissions = [
    { access = "write", path = "./output/incentiveId.txt"},
 ]
-
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
