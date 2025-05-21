@@ -2,20 +2,20 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import {Script} from "../lib/forge-std/src/Script.sol";
-import {IUniswapV3Staker} from "../src/interfaces/IUniswapV3Staker.sol";
-import {IERC20Minimal} from "@uniswap/v3-core/contracts/interfaces/IERC20Minimal.sol";
-import {IUniswapV3Pool} from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import {PoolAddress} from "@uniswap/v3-periphery/contracts/libraries/PoolAddress.sol";
-import {MockToken} from "../src/MockToken.sol";
-import {IncentiveId} from "../src/libraries/IncentiveId.sol";
-import {console} from "forge-std/console.sol";
+import {Script} from '../lib/forge-std/src/Script.sol';
+import {IUniswapV3Staker} from '../src/interfaces/IUniswapV3Staker.sol';
+import {IERC20Minimal} from '@uniswap/v3-core/contracts/interfaces/IERC20Minimal.sol';
+import {IUniswapV3Pool} from '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
+import {PoolAddress} from '@uniswap/v3-periphery/contracts/libraries/PoolAddress.sol';
+import {MockToken} from '../src/MockToken.sol';
+import {IncentiveId} from '../src/libraries/IncentiveId.sol';
+import {console} from 'forge-std/console.sol';
 contract CreateIncentive is Script {
     function run() public {
-        vm.createSelectFork(vm.envString("ALCHEMY_RPC_URL"));
-        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
+        vm.createSelectFork(vm.envString('ALCHEMY_RPC_URL'));
+        vm.startBroadcast(vm.envUint('PRIVATE_KEY'));
 
-        address _V3_STAKER_ADDRESS = vm.envAddress("V3_STAKER");
+        address _V3_STAKER_ADDRESS = vm.envAddress('V3_STAKER');
 
         IUniswapV3Staker staker = IUniswapV3Staker(_V3_STAKER_ADDRESS);
 
@@ -23,17 +23,14 @@ contract CreateIncentive is Script {
 
         mockToken.approve(_V3_STAKER_ADDRESS, 1000000000000000000000000);
 
-        IUniswapV3Staker.IncentiveKey memory key = IUniswapV3Staker
-            .IncentiveKey({
-                rewardToken: IERC20Minimal(address(mockToken)),
-                pool: IUniswapV3Pool(
-                    0x2619c1f283934F997023082b89b57B7F633C3169
-                ),
-                startTime: block.timestamp + 100,
-                endTime: block.timestamp + 10 days,
-                vestingPeriod: 43200,
-                refundee: address(0xe62A4B251d4e8fac52B08Cc2b88F091548426e4C)
-            });
+        IUniswapV3Staker.IncentiveKey memory key = IUniswapV3Staker.IncentiveKey({
+            rewardToken: IERC20Minimal(address(mockToken)),
+            pool: IUniswapV3Pool(0xFb0a4f34C80De8Ee5e7eae8dbbAEfe23508fAD6B),
+            startTime: block.timestamp + 100,
+            endTime: block.timestamp + 10 days,
+            vestingPeriod: 43200,
+            refundee: address(0xe62A4B251d4e8fac52B08Cc2b88F091548426e4C)
+        });
 
         bytes32 incentiveId = IncentiveId.compute(key);
 
@@ -49,10 +46,8 @@ contract CreateIncentive is Script {
     }
 
     // Helper function to convert bytes32 to a hex string
-    function bytes32ToHexString(
-        bytes32 data
-    ) internal pure returns (string memory) {
-        bytes memory alphabet = "0123456789abcdef";
+    function bytes32ToHexString(bytes32 data) internal pure returns (string memory) {
+        bytes memory alphabet = '0123456789abcdef';
         bytes memory str = new bytes(64);
         for (uint256 i = 0; i < 32; i++) {
             str[i * 2] = alphabet[uint8(data[i] >> 4)];
